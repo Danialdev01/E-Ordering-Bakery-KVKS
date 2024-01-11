@@ -81,11 +81,11 @@
                                 $jenis_permohonan = "Sedang Diproses";
                                 $color = "yellow";
                             }
+                            // else if($permohonan_pengguna['status_permohonan'] == 3){
+                            //     $jenis_permohonan = "Sedang Dibeli";
+                            //     $color = "yellow";
+                            // }
                             else if($permohonan_pengguna['status_permohonan'] == 3){
-                                $jenis_permohonan = "Sedang Dibeli";
-                                $color = "yellow";
-                            }
-                            else if($permohonan_pengguna['status_permohonan'] == 4){
                                 $jenis_permohonan = "Berjaya Dibeli";
                                 $color = "green";
                             }else{

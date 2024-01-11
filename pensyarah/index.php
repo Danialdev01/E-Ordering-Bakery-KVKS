@@ -15,7 +15,7 @@
                 ?>
                 <h3 class="text-xl" style="	font-weight: 500;">Nama : <span style="color:#3665B1"><?php echo $pensyarah['nama_pensyarah'] ?></span></h3>
             </div>
-            <div class="header-info-container pt-5 sm:flex hidden sm:block">
+            <div class="header-info-container pt-5 sm:flex">
                 <div class="header-info p-2 w-full">
                     <div
                         class="text-center block w-full rounded-lg bg-white text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
@@ -56,7 +56,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="header-info p-2 w-full hidden md:block">
+                <div class="header-info p-2 w-full block md:flex">
                     <div
                         class="text-center block w-full rounded-lg bg-white text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                         <?php 
@@ -78,11 +78,11 @@
             </div>
         </div>
 
-        <div class="table-permohonan-belum-sah">
+        <div class="hidden md:block table-permohonan-belum-sah">
             <center>
                 <div style="width: fit-content;" class="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
                     <spa><b>Permohonan Belum Sah</b></span>
-                    <div class="max-w-2xl" data-te-datatable-init>
+                    <div class="md:max-w-2xl w-full" data-te-datatable-init>
                         <table>
                             <thead>
                                 <tr>

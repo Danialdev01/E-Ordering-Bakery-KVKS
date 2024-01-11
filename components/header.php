@@ -1,14 +1,43 @@
 <?php 
-    session_start();
+  require_once("$location_index/config/config.php");
+  session_start();
 
-    // kalau pengguna tak log in 
-    $_SESSION['login_status_session'] = $_COOKIE['login_status_cookie'];
-    $_SESSION['id_pensyarah_session'] = $_COOKIE['id_pensyarah_cookie'];
-    if($_SESSION['login_status_session'] == 2){}
-    else{
-      header("location:$location_index/");
+  require_once("$location_index/config/csrf-token.php");
+  $token = generateCSRFToken();
+
+
+  // check kalau ada cookie
+  if(isset($_COOKIE['eOrderingCookie'])){
+    
+    // decrypt cookie
+    $ivLength = openssl_cipher_iv_length('AES-256-CBC');
+    $iv = substr('iv_for_encryption', 0, $ivLength);
+    $eOrderingCookie = openssl_decrypt($_COOKIE['eOrderingCookie'], 'AES-256-CBC', $secret_key, 0, $iv);
+
+    // filter cookie
+    parse_str($eOrderingCookie, $eOrderingCookieValue);
+
+    // set session
+    $_SESSION['login_status_session'] = $eOrderingCookieValue['login_status'];
+    $_SESSION['id_pensyarah_session'] = $eOrderingCookieValue['id_pensyarah'];
+
+  }
+
+  // check kalau ada session
+  if(isset($_SESSION['login_status_session']) && isset($_SESSION['id_pensyarah_session'])){
+
+    // kalau login_status tak sama
+    if($_SESSION['login_status_session'] != "LoggedInPensyarah"){
+
+      header("location:../");
 
     }
+  }
+  else{
+    // kalau takde sesssion
+    header("location:../");
+  }
+
     
 ?>
 
@@ -61,6 +90,19 @@
       class="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row"
       data-te-navbar-nav-ref>
         <?php if($location_index != "."){ ?>
+
+        <li
+          class="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+          data-te-nav-item-ref>
+          <a
+            class="text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+            aria-current="page"
+            href="<?php echo $location_index?>/pensyarah/"
+            data-te-nav-link-ref
+            >Papan Pemuka</a
+          >
+        </li>
+
         <!-- Aduan Komputer -->
         <li
           class="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
@@ -93,9 +135,21 @@
           <a
             class="text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
             aria-current="page"
-            href="<?php echo $location_index?>/pensyarah/pembelian-terdahulu"
+            href="<?php echo $location_index?>/pensyarah/permohonan-pengguna"
             data-te-nav-link-ref
-            >Pembelian Terdahulu</a
+            >Permohonan Pengguna</a
+          >
+        </li>
+
+        <li
+          class="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1"
+          data-te-nav-item-ref>
+          <a
+            class="text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+            aria-current="page"
+            href="<?php echo $location_index?>/pensyarah/permohonan-gabungan"
+            data-te-nav-link-ref
+            >Permohonan Gabungan</a
           >
         </li>
 
@@ -103,7 +157,7 @@
       </ul>
 
       <div class="flex items-center">
-        <a href="<?php echo $location_index?>/components/logout.php">
+        <a href="<?php echo $location_index?>/backend/logout.php">
           <button
             type="button"
             data-te-ripple-init
@@ -118,10 +172,10 @@
 </nav>
 
 <?php
-  session_start();
+  if(isset($_SESSION['prompt'])){
   $prompt = $_SESSION['prompt'];
   if($prompt != ""){
-      echo '<div class="flex justify-center"><div
+      echo '<br><div style="z-index: 999999;" class="flex justify-center"><div
   class="top-24 fixed pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-primary-100 bg-clip-padding text-sm text-primary-700 shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden"
   id="static-example"
   role="alert"
@@ -177,7 +231,7 @@
     '. $prompt . '
   </div>
 </div></div>';
-  }
+  }}
   $_SESSION['prompt'] = "";
 
 ?>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="shortcut icon" href="<?php echo $location_index?>/src/assets/images/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $location_index?>/src/assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="<?php echo $location_index?>/src/css/output.css">
     <link rel="stylesheet" href="<?php echo $location_index?>/src/css/main.css">
 
@@ -14,6 +14,10 @@
     <!-- tailwind -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css" />
+
+    <!-- bootstrap select -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     
     <style>
         input{
@@ -32,7 +36,8 @@
       .main-container{
         min-height: 100dvh;
       }
+      body{
+        background-color: #F8F8F9;
+      }
     </style>
 </head>
-
-

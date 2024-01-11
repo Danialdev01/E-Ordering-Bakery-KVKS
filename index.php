@@ -22,23 +22,42 @@
                 <div class="container w-100"></div>
                 <div class="container w-100">
                     <center>
-                        <img src="./src/assets/images/logo-banner.png" alt="logo-banner">
+                        <img class="hidden md:block mt-5" style="margin-left: -30px;" src="./src/assets/images/logo-banner.png" alt="logo-banner">
 
-                        <div class="login-form max-w-sm pt-5 p-5">
-                            <form action="./system/login-check.php" method="post">
-                                <div class="relative mb-6 mt-4 rounded bg-white">
+                        <div class="login-form max-w-sm pt-2 p-5">
+                            <form action="./backend/login-pensyarah.php" method="post">
+
+                                <input type="hidden" name="token" value="<?php echo $token?>">
+
+                                <div class="relative mb-3 mt-4 rounded bg-white">
                                     <select style="z-index:-100 !important" name="id_pensyarah" class="rounded-md bg-white" data-te-select-init data-te-select-filter="true" required>
                                         <option value="0">Nama Pensyarah</option>
                                         <?php
-                                            require_once("./db/config.php");
-                                            $pensyarah_sql = mysqli_query($connect, "SELECT * FROM pensyarah WHERE status_pensyarah = '1' ORDER BY nama_pensyarah ASC");
-                                            while($pensyarah = mysqli_fetch_array($pensyarah_sql)){
+                                            require_once('./config/config.php');
+                                            $pensyarah_sql = $pdo->prepare("SELECT * FROM pensyarah WHERE status_pensyarah = '1' ORDER BY nama_pensyarah ASC");
+                                            $pensyarah_sql->execute();
+                                            while($pensyarah = $pensyarah_sql->fetch(PDO::FETCH_ASSOC)){
                                                 ?>
                                                 <option value="<?php echo $pensyarah['id_pensyarah']?>"><?php echo $pensyarah['nama_pensyarah']?></option>
                                                 <?php
                                             }
                                         ?>
                                     </select>
+                                </div>
+
+                                <div class="relative mb-6" data-te-input-wrapper-init>
+                                    <input
+                                        type="text"
+                                        name="pensyarah-login-key"
+                                        onkeypress="return isNumberKey(event)"
+                                        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                        id="exampleFormControlInputText"
+                                        placeholder="Pensyarah Login Key" />
+                                    <label
+                                        for="exampleFormControlInputText"
+                                        class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+                                        >Pensyarah Login Key
+                                    </label>
                                 </div>
 
                                 <button
@@ -53,10 +72,12 @@
                             </form>
                         </div>
                     </center>
+                    <a href="./admin-login.php"><u>Admin Login</u></a>
                 </div>
             </div>
         </center>
     </section>
+    <script src="./src/assets/js/inputNumberValidation.js"></script>
 
 
     <?php $location_index = ".";include('./components/footer.php') ?>   

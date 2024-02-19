@@ -1,3 +1,4 @@
 config/.env
 config/.key
+config/database
 node_modules/

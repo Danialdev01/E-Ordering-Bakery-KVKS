@@ -201,6 +201,7 @@
 
                         <hr>
 
+                        <!--TODO display bahan di dalam table yang seragam -->
                         <div id="displayDivContainer" class="font-md pt-5 pb-10"></div>
 
 

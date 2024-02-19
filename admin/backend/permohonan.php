@@ -50,6 +50,24 @@
             }
         }
 
+        //@ Aktifkan Permohonan
+        else if(isset($_POST['aktifkan'])){
+
+            if(isset($_POST['id_permohonan'])){
+
+                $id_permohonan = $_POST['id_permohonan'];
+
+                $aktifkan_permohonan_sql = $pdo->prepare("UPDATE permohonan SET status_permohonan = 1 WHERE id_permohonan = ?");
+                $aktifkan_permohonan_sql->execute([$id_permohonan]);
+
+                $_SESSION['prompt'] = "Berjaya Aktifkan Semula Permohonan";
+                header("location:../permohonan");
+            }
+            else{
+                $_SESSION['prompt'] = "Data Tidak Mencukupi";
+                header("Location: " . $_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         else{
             $_SESSION['prompt'] = "Salah Request";

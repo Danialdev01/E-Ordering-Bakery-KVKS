@@ -118,8 +118,9 @@ use Dompdf\Options;
         $dompdf->loadHtml($html);
         $dompdf->render();
     
-        // $dompdf->addInfo("Borang Penyelengaraan", "Penyelengaraan Elektronik");
-        $dompdf->stream("borang-permohonan.pdf", ["Attachment" => 0]);
+        $tarikh_cipta = $pembelian['tarikh_cipta_pembelian'];
+    
+        $dompdf->stream("pembelian.pdf", ["Attachment" => 0]);
     }
     else{
         header("location:./");

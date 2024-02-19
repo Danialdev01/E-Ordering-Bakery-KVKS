@@ -8,51 +8,43 @@
         //@ Tambah Pembelian
         if(isset($_POST['tambah'])){
 
-            if(isset($_POST['id_permohonan'])){
+            if(isset($_POST['id_permohonan']) && isset($_POST['harga_anggaran_pembelian'])){
 
-                if(isset($_POST['harga_anggaran_pembelian'])){
+                // fetch data
+                $permohonan_pembelian = $_POST['id_permohonan'];
 
-                    // fetch data
-                    $permohonan_pembelian = $_POST['id_permohonan'];
-    
-                    // tambah pembelian baru
-                    $tambah_pembelian_sql = $pdo->prepare("INSERT INTO pembelian(id_pembelian, tarikh_cipta_pembelian, id_permohonan_pembelian, tarikh_pelaksanaan_pembelian, harga_anggaran_pembelian, harga_pembelian, status_pembelian) VALUES (NULL , ? , ? , NULL , ? , NULL , 1)");
-                    $tambah_pembelian_sql->execute([
-                        date("Y/m/d"),
-                        $_POST['id_permohonan'],
-                        $_POST['harga_anggaran_pembelian']
-                    ]);
+                // tambah pembelian baru
+                $tambah_pembelian_sql = $pdo->prepare("INSERT INTO pembelian(id_pembelian, tarikh_cipta_pembelian, id_permohonan_pembelian, tarikh_pelaksanaan_pembelian, harga_anggaran_pembelian, harga_pembelian, status_pembelian) VALUES (NULL , ? , ? , NULL , ? , NULL , 1)");
+                $tambah_pembelian_sql->execute([
+                    date("Y/m/d"),
+                    $_POST['id_permohonan'],
+                    $_POST['harga_anggaran_pembelian']
+                ]);
 
-                    // filter data id_permohonan
-                    $permohonan_pembelian = rtrim($permohonan_pembelian, ', ');
-                    $permohonan_pembelianArray = explode(',', $permohonan_pembelian);
+                // filter data id_permohonan
+                $permohonan_pembelian = rtrim($permohonan_pembelian, ', ');
+                $permohonan_pembelianArray = explode(',', $permohonan_pembelian);
 
-                    foreach($permohonan_pembelianArray as $permohonan){
-                        
-                        // update status permohonan = 3 (sedang diproses)
-                        $update_status_permohonan_sql = $pdo->prepare("UPDATE permohonan SET status_permohonan = '3' WHERE id_permohonan = ?");
-                        $update_status_permohonan_sql->execute([$permohonan]);
-
-                    }
-
-                    // redirect
-                    $_SESSION['prompt'] = "Berjaya Tambah Pembelian";
-                    header("location:../permohonan");
+                foreach($permohonan_pembelianArray as $permohonan){
+                    
+                    // update status permohonan = 3 (sedang diproses)
+                    $update_status_permohonan_sql = $pdo->prepare("UPDATE permohonan SET status_permohonan = '3' WHERE id_permohonan = ?");
+                    $update_status_permohonan_sql->execute([$permohonan]);
 
                 }
-                else{
-                    $_SESSION['prompt'] = "Data Tidak Mencukupi";
-                    header("Location: " . $_SERVER["HTTP_REFERER"]);
-                }
+
+                // redirect
+                $_SESSION['prompt'] = "Berjaya Tambah Pembelian";
+                header("location:../permohonan");
                 
             }
             else{
-                $_SESSION['prompt'] = "Sila Pilih Permohonan";
+                $_SESSION['prompt'] = "Data Tidak Mencukupi";
                 header("Location: " . $_SERVER["HTTP_REFERER"]);
             }
         }
 
-        //@ Delete
+        //@ Batal Pembelian
         else if(isset($_POST['batal'])){
 
             if(isset($_POST['id_pembelian'])){
@@ -86,23 +78,85 @@
                 $_SESSION['prompt'] = "Berjaya Batalkan Pembelian";
                 header("location:../pembelian");
             }
+            else{
+                $_SESSION['prompt'] = "Data Tidak Mencukupi";
+                header("Location: " . $_SERVER["HTTP_REFERER"]);
+            }
         }
 
+        //@ Sahkan Pembelian
         else if(isset($_POST['sahkan'])){
 
             if(isset($_POST['id_pembelian'])){
 
                 $id_pembelian = $_POST['id_pembelian'];
 
+                $pembelian_sql = $pdo->prepare("SELECT * FROM pembelian WHERE id_pembelian = ?");
+                $pembelian_sql->execute([$id_pembelian]);
+                $pembelian = $pembelian_sql->fetch(PDO::FETCH_ASSOC);
+
+                // filter id_permohonan_pembelian
+                $permohonan_pembelian = rtrim($pembelian['id_permohonan_pembelian'], ', ');
+                $permohonan_pembelianArray = explode(',', $permohonan_pembelian);
+                
+                // update status semua permohonan pembelian
+                foreach($permohonan_pembelianArray as $permohonan){
+                    
+                    // update status permohonan = 4 (sudah dibeli)
+                    $sah_pembelian_permohonan_sql = $pdo->prepare("UPDATE permohonan SET status_permohonan = '4' WHERE id_permohonan = ?");
+                    $sah_pembelian_permohonan_sql->execute([$permohonan]);
+
+                }
+
                 // UPDATE status pembelian = 2 (sah)
-                $sahkan_pembelian_sql = $pdo->prepare("UPDATE pembelian SET status_pembelian = 2 WHERE id_pembelian = ?");
+                $sahkan_pembelian_sql = $pdo->prepare("UPDATE pembelian SET status_pembelian = '2' WHERE id_pembelian = ?");
                 $sahkan_pembelian_sql->execute([$id_pembelian]);
 
                 $_SESSION['prompt'] = "Berjaya Sahkan Pembelian";
                 header("location:../pembelian");
 
             }
+            else{
+                $_SESSION['prompt'] = "Data Tidak Mencukupi";
+                header("Location: " . $_SERVER["HTTP_REFERER"]);
+            }
         }
+
+        //@ Aktifkan Pembelian
+        else if(isset($_POST['aktifkan'])){
+
+            if(isset($_POST['id_pembelian'])){
+
+                $id_pembelian = $_POST['id_pembelian'];
+
+                // cari info pembelian
+                $pembelian_sql = $pdo->prepare("SELECT * FROM pembelian WHERE id_pembelian = ?");
+                $pembelian_sql->execute([$id_pembelian]);
+                $pembelian = $pembelian_sql->fetch(PDO::FETCH_ASSOC);
+
+                // filter id_permohonan_pembelian
+                $permohonan_pembelian = rtrim($pembelian['id_permohonan_pembelian'], ', ');
+                $permohonan_pembelianArray = explode(',', $permohonan_pembelian);
+                
+                // update status semua permohonan pembelian
+                foreach($permohonan_pembelianArray as $permohonan){
+                    
+                    // update status permohonan = 1 (baru)
+                    $aktif_pembelian_permohonan_sql = $pdo->prepare("UPDATE permohonan SET status_permohonan = '1' WHERE id_permohonan = ?");
+                    $aktif_pembelian_permohonan_sql->execute([$permohonan]);
+
+                }
+
+                // UPDATE status pembelian = 1 (batal)
+                $aktif_pembelian_sql = $pdo->prepare("UPDATE pembelian SET status_pembelian = '2' WHERE id_pembelian = ?");
+                $aktif_pembelian_sql->execute([$id_pembelian]);
+            }
+            else{
+                $_SESSION['prompt'] = "Data Tidak Mencukupi";
+                header("Location: " . $_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         else{
             $_SESSION['prompt'] = "Salah Request";
             header("Location: " . $_SERVER["HTTP_REFERER"]);

@@ -40,7 +40,7 @@
     
                         // redirecct
                         $_SESSION['prompt'] = "Berjaya Tambah Pengguna";
-                        header("Location:../pengguna.php");
+                        header("Location:../pengguna");
     
                     }
                     else{

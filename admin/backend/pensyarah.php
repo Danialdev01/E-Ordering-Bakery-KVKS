@@ -11,8 +11,9 @@
             if(isset($_POST['id_pensyarah'])){
 
                 $id_pensyarah = $_POST['id_pensyarah'];
-
-                $batal_pensyarah_sql = $pdo->prepare("UPDATE pensyarah SET status_pensyarah = 0 WHERE id_pensyara = ?");
+                
+                $batal_pensyarah_sql = $pdo->prepare("UPDATE pensyarah SET status_pensyarah = 0 WHERE id_pensyarah = ?");
+                echo "thil";
                 $batal_pensyarah_sql->execute([$id_pensyarah]);
 
                 $_SESSION['prompt'] = "Berjaya Batalkan Pensyarah";
@@ -24,6 +25,28 @@
             }
         } 
 
+        else if(isset($_POST['tambah'])){
+
+            if(
+                isset($_POST['nama_pensyarah'])
+            ){
+
+                $nama_pensyarah = $_POST['nama_pensyarah'];
+                $tambah_pensyarah_sql = $pdo->prepare("INSERT INTO pensyarah(id_pensyarah, nama_pensyarah, status_pensyarah) VALUES (NULL, ? , 1)");
+                $tambah_pensyarah_sql->execute([$nama_pensyarah]);
+
+                // redirect
+                $_SESSION['prompt'] = "Berjaya Tambah Pensyarah";
+                header("location:../pengguna");
+            }
+            else{
+                $_SESSION['prompt'] = "Sila Isi data Pensyarah";
+                header("Location: " . $_SERVER["HTTP_REFERER"]);
+            }
+        }
+        
+
+        //@ Kemaskini Pensyarah
         else if(isset($_POST['kemaskini'])){
 
             if(

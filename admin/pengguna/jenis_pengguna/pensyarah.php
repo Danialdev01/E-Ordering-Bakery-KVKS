@@ -14,6 +14,11 @@
         <div id="datatable1"></div>
     </div>
 </center>
+<div class="tambah">
+    <a href="tambah-pensyarah.php">
+    <button style="background-color: black;border-radius:50%;width:40px;height:40px;color:white;font-size:1.3rem;position:relative;bottom:5%;left:90%">+</button>
+    </a>
+</div>
 
 <script>
     const data1 = {
@@ -27,7 +32,7 @@
     rows: [
         <?php 
 
-            $pengguna_pensyarah_sql = $pdo->prepare("SELECT * FROM pensyarah");
+            $pengguna_pensyarah_sql = $pdo->prepare("SELECT * FROM pensyarah WHERE status_pensyarah = 1");
             $pengguna_pensyarah_sql->execute([]);
 
             $no = 0;
@@ -45,7 +50,7 @@
                     $permohonan_pensyarah_bil++;
                 }
 
-                echo "[\"$no\", \"$nama_pensyarah\", \"$permohonan_pensyarah_bil\", \"<a href='kemaskini-pensyarah.php?id_pensyarah=$id_pensyarah'>kemaskini</a> \", \"<form action='../backend/pensyarah.php'><input type='hidden' name='token' value='$token'><input type='hidden' name='id_pensyarah' value='$id_pensyarah'><button type='submit' name='batal'>Batal</button></form> \"],";
+                echo "[\"$no\", \"$nama_pensyarah\", \"$permohonan_pensyarah_bil\", \"<a href='kemaskini-pensyarah.php?id_pensyarah=$id_pensyarah'>kemaskini</a> \", \"<form method='post' action='../backend/pensyarah.php'><input type='hidden' name='token' value='$token'><input type='hidden' name='id_pensyarah' value='$id_pensyarah'><button type='submit' name='batal'>Batal</button></form> \"],";
 
             }
         ?>

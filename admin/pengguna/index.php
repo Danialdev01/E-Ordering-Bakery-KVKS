@@ -85,6 +85,7 @@
                 aria-labelledby="pills-profile-tab">
 
                 <!-- Admin -->
+                <?php include('./jenis_pengguna/admin.php')?>
             </div>
         </div>
         <script src="../../src/assets/js/inputNumberValidation.js"></script>
